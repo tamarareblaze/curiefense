@@ -455,7 +455,7 @@ pub fn jsonlog_rinfo(
             let content_filters = stats_counter(InitiatorKind::ContentFilter);
             let restriction = stats_counter(InitiatorKind::Restriction);
             
-            sum_block_trig = acl + global_filters + rate_limit + content_filters + restriction
+            sum_block_trig = acl + global_filters + rate_limit + content_filters + restriction;
             
             let mut mp = serializer.serialize_map(None)?;
             mp.serialize_entry("acl", &acl)?;
