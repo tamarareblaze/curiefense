@@ -468,11 +468,13 @@ pub fn jsonlog_rinfo(
     }
     map_ser.serialize_entry("trigger_counters", &TriggerCounters(&greasons))?;
 
+    let blocked = false
+
     if sum_block_trig > 0 {
-        map_ser.serialize_entry("blocked", true)?;
-    } else {
-        map_ser.serialize_entry("blocked", false)?;
-    }
+        blocked = true;
+    } 
+
+    map_ser.serialize_entry("blocked", &blocked)?;
 
     struct EmptyMap;
     impl Serialize for EmptyMap {
