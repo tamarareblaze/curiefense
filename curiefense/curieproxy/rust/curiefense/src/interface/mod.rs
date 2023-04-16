@@ -434,7 +434,9 @@ pub fn jsonlog_rinfo(
         }
     }
     map_ser.serialize_entry("security_config", &SecurityConfig(stats, &rinfo.rinfo.secpolicy))?;
-
+    
+    let sum_block_trig = 0;
+    
     struct TriggerCounters<'t>(&'t HashMap<InitiatorKind, Vec<&'t BlockReason>>);
     impl<'t> Serialize for TriggerCounters<'t> {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -452,22 +454,25 @@ pub fn jsonlog_rinfo(
             let rate_limit = stats_counter(InitiatorKind::RateLimit);
             let content_filters = stats_counter(InitiatorKind::ContentFilter);
             let restriction = stats_counter(InitiatorKind::Restriction);
-
+            
+            sum_block_trig = acl + global_filters + rate_limit + content_filters + restriction
+            
             let mut mp = serializer.serialize_map(None)?;
             mp.serialize_entry("acl", &acl)?;
             mp.serialize_entry("gf", &global_filters)?;
             mp.serialize_entry("rl", &rate_limit)?;
             mp.serialize_entry("cf", &content_filters)?;
             mp.serialize_entry("cf_restrict", &restriction)?;
-            mp.end();
-            if acl + global_filters + rate_limit + content_filters + restriction > 0 {
-                map_ser.serialize_entry("blocked", true)?;
-            } else {
-                map_ser.serialize_entry("blocked", false)?;
-            }
+            mp.end()
         }
     }
     map_ser.serialize_entry("trigger_counters", &TriggerCounters(&greasons))?;
+    
+    if sum_block_trig > 0 {
+        map_ser.serialize_entry("blocked", true)?;
+    } else {
+        map_ser.serialize_entry("blocked", false)?;
+    }
 
     struct EmptyMap;
     impl Serialize for EmptyMap {
