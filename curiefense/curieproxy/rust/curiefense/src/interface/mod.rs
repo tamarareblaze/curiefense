@@ -468,7 +468,7 @@ pub fn jsonlog_rinfo(
     }
     map_ser.serialize_entry("trigger_counters", &TriggerCounters(&greasons))?;
 
-    let blocked = false
+    let blocked = false;
 
     if sum_block_trig > 0 {
         blocked = true;
