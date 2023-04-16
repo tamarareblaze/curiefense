@@ -472,7 +472,7 @@ pub fn jsonlog_rinfo(
 
     if sum_block_trig > 0 {
         blocked = true;
-    } 
+    }
 
     map_ser.serialize_entry("blocked", &blocked)?;
 
