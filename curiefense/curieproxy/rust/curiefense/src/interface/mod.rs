@@ -460,7 +460,11 @@ pub fn jsonlog_rinfo(
             mp.serialize_entry("cf", &content_filters)?;
             mp.serialize_entry("cf_restrict", &restriction)?;
             mp.end();
-            map_ser.serialize_entry("blocked", acl + global_filters + rate_limit + content_filters + restriction)?
+            if acl + global_filters + rate_limit + content_filters + restriction > 0 {
+                map_ser.serialize_entry("blocked", true)?;
+            } else {
+                map_ser.serialize_entry("blocked", false)?;
+            }
         }
     }
     map_ser.serialize_entry("trigger_counters", &TriggerCounters(&greasons))?;
