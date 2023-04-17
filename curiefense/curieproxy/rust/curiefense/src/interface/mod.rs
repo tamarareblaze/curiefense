@@ -435,8 +435,6 @@ pub fn jsonlog_rinfo(
     }
     map_ser.serialize_entry("security_config", &SecurityConfig(stats, &rinfo.rinfo.secpolicy))?;
 
-//     let mut sum_block_trig = 0;
-
     struct TriggerCounters<'t>(&'t HashMap<InitiatorKind, Vec<&'t BlockReason>>);
     impl<'t> Serialize for TriggerCounters<'t> {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
